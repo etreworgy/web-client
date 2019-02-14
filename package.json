@@ -1,4 +1,5 @@
 {
+	"name": "parsec-web-client",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
