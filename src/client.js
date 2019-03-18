@@ -40,7 +40,7 @@ function cfgDefaults(cfg) {
 }
 
 export class Client {
-	constructor(element, onEvent) {
+	constructor(element, onEvent, inputHandlers) {
 		this.onEvent = onEvent;
 		this.audioPlayer = new AudioPlayer();
 		this.connected = false;
@@ -59,7 +59,7 @@ export class Client {
 		this.input = new Input(element, (buf) => {
 			if (this.connected)
 				this.rtc.send(buf, 0);
-		});
+		}, inputHandlers);
 
 		this.listeners.push(Util.addListener(window, 'beforeunload', () => {
 			this.destroy(0);
