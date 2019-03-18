@@ -31,7 +31,7 @@ function getAxisValue(value) {
 }
 
 export class Input {
-	constructor(element, send) {
+	constructor(element, send, handlers) {
 		this.send = send;
 		this.element = element;
 		this.m = null;
@@ -43,6 +43,7 @@ export class Input {
 		this.cache = {};
 		this.styles = [];
 		this.cursorId = 0;
+		this.inputHandlers = handlers ? handlers : [];
 	}
 
 	_mouseMovement(event) {
@@ -243,6 +244,13 @@ export class Input {
 		this.listeners.push(Util.addListener(window, 'keydown', this._key, this));
 		this.listeners.push(Util.addListener(window, 'keyup', this._key, this));
 		this.listeners.push(Util.addListener(window, 'resize', this._windowMath, this));
+
+		for (const handler of this.inputHandlers) {
+			// Verify the handler exists and has the required methods
+			if (handler && handler.attach && handler.detach) {
+				handler.attach(this);
+			}
+		}
 	}
 
 	detach() {
@@ -254,5 +262,12 @@ export class Input {
 
 		if (this.gamepad)
 			this.gamepad.destroy();
+
+		for (const handler of this.inputHandlers) {
+			// Verify the handler exists and has the required methods
+			if (handler && handler.attach && handler.detach) {
+				handler.detach(this);
+			}
+		}
 	}
 }

@@ -78,6 +78,11 @@ export class AudioPlayer {
 	}
 
 	destroy() {
-		this.opus.ccall('cleanup');
+		try {
+			this.opus.ccall('cleanup');
+		} catch (err) {
+			// eslint-disable-next-line no-console
+			console.error('shutting down opus lib failed with error, ignoring', err);
+		}
 	}
 }
